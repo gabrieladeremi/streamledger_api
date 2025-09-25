@@ -2,8 +2,6 @@
 
 namespace App\Support;
 
-use Illuminate\Http\Request;
-
 class UserRegistrationData
 {
   public function __construct(

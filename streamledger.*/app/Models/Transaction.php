@@ -12,7 +12,10 @@ class Transaction extends Model
 
   protected $fillable = [
     'user_id',
+    'entry',        // <-- must include this
+    'amount_cents',
     'balance_cents',
+    'idempotency_key'
   ];
 
   protected $casts = [

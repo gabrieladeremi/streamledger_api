@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\UserResource;
+use App\Resources\UserResource;
 use App\Services\AuthenticationService;
 
 class LoginController extends Controller
