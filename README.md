@@ -86,6 +86,8 @@ POST /api/v1/transactions/export → Trigger export job (Excel generated asynchr
 
 ** As postman documentation link is attached below
 
+https://documenter.getpostman.com/view/26718931/2sB3QDuCbu
+
 📊 Design Choices & Trade-offs
 
 Laravel Sanctum vs JWT
@@ -135,3 +137,5 @@ Add Kafka consumer within Laravel (php artisan kafka:consume)
 Add Docker Compose for DB + Kafka setup (for portability)
 
 Implement multi-wallet support per user
+
+Implement robust error system
