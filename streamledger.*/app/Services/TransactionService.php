@@ -10,8 +10,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TransactionService
 {
-  // public function __construct(public readonly KafkaProducer $kafkaProducer)
-  // {}
+  protected KafkaProducer $kafkaProducer;
+
+  public function __construct(KafkaProducer $kafkaProducer)
+  {
+    $this->kafkaProducer = $kafkaProducer;
+  }
 
   public function initiateTransaction(User $user, TransactionData $transactionData): Transaction
   {
@@ -31,7 +35,7 @@ class TransactionService
       'timestamp' => $transaction->created_at->toIso8601String(),
     ];
 
-    // $this->kafkaProducer->produce(json_encode($kafkaPayload));
+    $this->kafkaProducer->produce(json_encode($kafkaPayload));
 
     return $transaction;
   }

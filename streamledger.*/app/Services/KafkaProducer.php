@@ -4,15 +4,11 @@ namespace App\Services;
 
 use RdKafka\Producer;
 use RdKafka\Conf;
-use RdKafka\ProducerTopic;
-use Throwable;
 
 class KafkaProducer
 {
-  public const PARTITION_UA = "RD_KAFKA_PARTITION_UA";
-
   protected Producer $producer;
-  protected ProducerTopic $topic;
+  protected string $topic;
 
   public function __construct()
   {
@@ -20,22 +16,22 @@ class KafkaProducer
     $conf->set('metadata.broker.list', config('kafka.brokers'));
 
     $this->producer = new Producer($conf);
-
-    /** @var ProducerTopic $topic */
-    $topic = $this->producer->newTopic(config('kafka.topic'));
-    $this->topic = $topic; // now Intelephense knows it's ProducerTopic
+    $this->topic = config('kafka.topic');
   }
 
-  /**
-   * $message should be a string (JSON)
-   */
   public function produce(string $message): void
   {
-    try {
-      $this->topic->produce(self::PARTITION_UA, 0, $message);
-      $this->producer->flush(1000);
-    } catch (Throwable $e) {
-      logger()->error('Kafka produce error: ' . $e->getMessage(), ['exception' => $e]);
+    $topic = $this->producer->newTopic($this->topic);
+    $topic->produce(RD_KAFKA_PARTITION_UA, 0, $message);
+
+    // flush messages
+    for ($i = 0; $i < 3; $i++) {
+      $result = $this->producer->flush(1000);
+      if ($result === RD_KAFKA_RESP_ERR_NO_ERROR) {
+        return;
+      }
     }
+
+    throw new \RuntimeException('Failed to flush Kafka messages');
   }
 }

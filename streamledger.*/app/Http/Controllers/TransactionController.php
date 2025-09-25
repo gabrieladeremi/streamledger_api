@@ -17,7 +17,7 @@ class TransactionController extends Controller
 
     $user = $request->user();
 
-    $transactions = (new TransactionService())->getTransactions($user, $perPage);
+    $transactions = (new TransactionService(new KafkaProducer()))->getTransactions($user, $perPage);
 
     return response()->json([
       'data' => TransactionResource::collection($transactions)->resolve(),
@@ -47,7 +47,7 @@ class TransactionController extends Controller
 
     $transactionData = TransactionData::createFromRequest($data);
 
-    $transaction = (new TransactionService())->initiateTransaction($user, $transactionData);
+    $transaction = (new TransactionService(new KafkaProducer()))->initiateTransaction($user, $transactionData);
 
     return new TransactionResource($transaction);
   }
