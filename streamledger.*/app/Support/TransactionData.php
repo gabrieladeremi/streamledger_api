@@ -22,7 +22,7 @@ class TransactionData
 
     $entry = $request['entry'];
 
-    $idempotencyKey = $request['idempotencyKey'];
+    $idempotencyKey = $request['idempotencyKey'] ?? null;
 
     throw_if(
       ! isset($amount, $entry),
